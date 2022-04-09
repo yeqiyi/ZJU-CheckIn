@@ -57,6 +57,9 @@ func(c CheckIn)SignIn()error{
 	}
     defer resp1.Body.Close()
 	raw,err:=ioutil.ReadAll(resp1.Body)
+	if err!=nil{
+		return err
+	}
 	urlVals,err:=conf.GetReqBody(raw)
 	if err!=nil{
 		return err
@@ -71,6 +74,7 @@ func(c CheckIn)SignIn()error{
 	req2.Header.Add("Accept-Encoding","gzip, deflate, br")
 	req2.Header.Add("X-Requested-With","XMLHttpRequest") //请求是否由ajax发起
 	req2.Header.Add("referer","https://healthreport.zju.edu.cn/ncov/wap/default/index")
+	req1.Header.Add("connection","keep-alive")
 	if err!=nil{
 		return err
 	}
