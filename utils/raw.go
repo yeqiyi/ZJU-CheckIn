@@ -28,7 +28,7 @@ func Getfields(raw []byte) (map[string]string, error) {
 }
 
 //获取Id
-func GetId(raw []byte) (string, error) {
+func GetId(raw []byte) string {
 	id:=""
 	rawStr := string(raw)
 	reg := regexp.MustCompile(`var.*?def.*?{.*?\"id\":\"(\d*)\".*?}`)
@@ -36,11 +36,11 @@ func GetId(raw []byte) (string, error) {
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	id=res[0][1]
-	return id,nil
+	return id
 }
 
 //获取Uid
-func GetUid(raw []byte) (string, error) {
+func GetUid(raw []byte) string {
 	uid:=""
 	rawStr := string(raw)
 	reg := regexp.MustCompile(`var.*?def.*?{.*?\"uid\":\"(\d*)\".*?}`)
@@ -48,12 +48,12 @@ func GetUid(raw []byte) (string, error) {
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	uid=res[0][1]
-	return uid,nil
+	return uid
 }
 
 
 //获取Date
-func GetDate(raw []byte) (string, error) {
+func GetDate(raw []byte)string{
 	date:=""
 	rawStr := string(raw)
 	reg := regexp.MustCompile(`var.*?def.*?{.*?\"date\":\"(\d*)\".*?}`)
@@ -61,12 +61,12 @@ func GetDate(raw []byte) (string, error) {
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	date=res[0][1]
-	return date,nil
+	return date
 }
 
 
 //获取created字段
-func GetCreated(raw []byte) (string, error) {
+func GetCreated(raw []byte)string{
 	created:=""
 	rawStr := string(raw)
 	reg := regexp.MustCompile(`var.*?def.*?{.*?\"created\":\"(\d*)\".*?}`)
@@ -74,5 +74,5 @@ func GetCreated(raw []byte) (string, error) {
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	created=res[0][1]
-	return created,nil
+	return created
 }

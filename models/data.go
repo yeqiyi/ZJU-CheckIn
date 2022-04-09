@@ -54,7 +54,7 @@ type Info struct {
 	Area       string // "浙江省 宁波市 鄞州区"
 	Province   string //"浙江省"
 	City       string //"宁波市"
-	GeoApiInfo string //具体定位信息，从config/getinfo.json中读取
+	GeoApiInfo string //具体定位信息，从geoinfos/*.json中读取
 	Created    string //上次打卡时间，时间戳（从Raw中的def截取）
 	Qksm       string //情况说明，与字段Sfcxzysx相关联（若Sfcxzysx为0，此字段为空）
 

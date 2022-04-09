@@ -1,8 +1,9 @@
 package models
 
 import (
-	"gopkg.in/ini.v1"
+	"checkIn/utils"
 	"net/url"
+	"gopkg.in/ini.v1"
 )
 
 
@@ -20,8 +21,12 @@ func LoadConf(configPath string)(*Config,error){
 	return conf,nil
 }
 
-func(c Config)GetReqBody() url.Values {
+func(c Config)GetReqBody(raw []byte) (url.Values,error) {
 	urlVals := url.Values{}
+	rawGeoInfo,g,err:=utils.GetGeoInfo(c.Campus)
+	if err!=nil{
+		return urlVals,err
+	}
 
 	urlVals.Add("sfymqjczrj","0") //家人是否14天入境或拟入境，为0
 	urlVals.Add("zjdfgj","") //14天到过的国家地区，为空
@@ -50,10 +55,75 @@ func(c Config)GetReqBody() url.Values {
 	urlVals.Add("sfbyjzrq","5") //是否不宜接种人群:否
 	urlVals.Add("jzxgymqk","6") //当前接种情况:已接种第三针
 	urlVals.Add("campus","宁波校区") //所在校区
-	urlVals.Add("id","")
+	urlVals.Add("id",utils.GetId(raw))
+	urlVals.Add("uid",utils.GetUid(raw))
+	urlVals.Add("date",utils.GetDate(raw))
+	urlVals.Add("tw","0") //是否发热
+	urlVals.Add("sfcxtz","0")
+	urlVals.Add("sfyyjc","0") //与sfcxtz字段相关联(若sfcxtz为0，此字段值为0)
+	urlVals.Add("jcjgqr","0") //与Sfyyjc字段相关联（若Sfyyjc为0，此字段值为0）
+	urlVals.Add("jcjg","") //与Sfyyjc字段相关联（若Sfyyjc为0，此字段值为空）
+	urlVals.Add("sfjcbh","0") //是否接触病患
+	urlVals.Add("sfcxzysx","0") //是否有任何与疫情相关的，值得注意的情况（1：有；0：没有）
+	urlVals.Add("remark","") //其他信息，与Sfcxzysx字段相关联（若Sfcxzysx为0，此字段为空）
+	urlVals.Add("address",g.FmtAddr) //就是formattedAddress
+	urlVals.Add("area",g.AddrComp.Prov+" "+g.AddrComp.City+" "+g.AddrComp.Dst) 
+	urlVals.Add("province",g.AddrComp.Prov) 
+	urlVals.Add("city",g.AddrComp.City)
+	urlVals.Add("geo_api_info",rawGeoInfo) ///具体定位信息，从geoinfos/*.json中读取
+	urlVals.Add("created",utils.GetCreated(raw)) //上次打卡时间，时间戳（从Raw中的def截取）
+	urlVals.Add("qksm","") //情况说明，与字段Sfcxzysx相关联（若Sfcxzysx为0，此字段为空）
+	urlVals.Add("sfzx","1") //今日是否在校（在：1；不在：0）
+	urlVals.Add("sfjcwhry","0") 
+	urlVals.Add("sfcyglq","0") //是否居家观察 为0
+	urlVals.Add("gllx","") //隔离场所,为空
+	urlVals.Add("glksrq","") //隔离观察开始时间，为空
+	urlVals.Add("jcbhlx","") //与Sfjcbh字段关联（若Sfjcbh为0，此字段为空）
+	urlVals.Add("jcbhrq","") //与Sfjcbh字段关联（若Sfjcbh为0，此字段为空）
+	urlVals.Add("sftjwh","0")
+	urlVals.Add("sftjhb","0")
+	urlVals.Add("fxyy","") //返校原因
+	urlVals.Add("bztcyy","5") //不同城原因,返校为5
+	urlVals.Add("fjsj","0")
+	urlVals.Add("sfjchbry","0")
+	urlVals.Add("jrsfqzys","")
+	urlVals.Add("jrsfqzfy","")
+	urlVals.Add("sfyqjzgc","") //是否被当地管理部门要求集中观察，为空
+	urlVals.Add("jrdqjcqk","")
+	urlVals.Add("sfjcqz","")
+	urlVals.Add("jcqzrq","")
+	urlVals.Add("jcwhryfs","")
+	urlVals.Add("jchbryfs","")
+	urlVals.Add("xjzd","")
+	urlVals.Add("szgj","")
+	urlVals.Add("sfsfbh","0")
+	urlVals.Add("jhfjrq","")
+	urlVals.Add("jhfjjtgj","")
+	urlVals.Add("jhfjhbcc","")
+	urlVals.Add("jhfjsftjwh","0")
+	urlVals.Add("jhfjsftjhb","0")
+	urlVals.Add("szsqsfybl","0")
+	urlVals.Add("sfsqhzjkk","1") //是否申领所在地健康码（已领：1；未领：0）
+	urlVals.Add("sqhzjkkys","1") //健康码颜色（1:绿；2：红；3：黄；4：橙）
+	urlVals.Add("sfygtjzzfj","0")
+	urlVals.Add("gtjzzfjsj","")
+	urlVals.Add("gwszgz","")
+	urlVals.Add("gwszgzcs","")
+	urlVals.Add("gwszdd","")
+	urlVals.Add("szgjcs","")
+	specFiled,err:=utils.Getfields(raw)
+	if err!=nil{
+		return urlVals,err
+	}
+	for k,v:=range specFiled{
+		urlVals.Add(k,v)
+	}
+	if c.Ismoved{
+		urlVals.Add("ismoved","1")
+	}else{
+		urlVals.Add("ismoved","0")
+	}
+	urlVals.Add("zgfx14rfhsj","")
 
-
-
-
-	return urlVals
+	return urlVals,nil
 }
