@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 )
 
@@ -31,11 +32,12 @@ func Getfields(raw []byte) (map[string]string, error) {
 func GetId(raw []byte) string {
 	id:=""
 	rawStr := string(raw)
-	reg := regexp.MustCompile(`var.*?def.*?{.*?\"id\":\"(\d*)\".*?}`)
+	reg := regexp.MustCompile(`var.*?def.*?{.*?\"id\":\"?(\d*)\"?.*?}`)
 	
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	id=res[0][1]
+	fmt.Println("got id = ",id)
 	return id
 }
 
@@ -48,6 +50,7 @@ func GetUid(raw []byte) string {
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	uid=res[0][1]
+	fmt.Println("got uid = ",uid)
 	return uid
 }
 
@@ -56,11 +59,12 @@ func GetUid(raw []byte) string {
 func GetDate(raw []byte)string{
 	date:=""
 	rawStr := string(raw)
-	reg := regexp.MustCompile(`var.*?def.*?{.*?\"date\":\"(\d*)\".*?}`)
+	reg := regexp.MustCompile(`var.*?def.*?{.*?\"date\":\"?(\d*)\"?.*?}`)
 	
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	date=res[0][1]
+	fmt.Println("got date = ",date)
 	return date
 }
 
@@ -69,10 +73,11 @@ func GetDate(raw []byte)string{
 func GetCreated(raw []byte)string{
 	created:=""
 	rawStr := string(raw)
-	reg := regexp.MustCompile(`var.*?def.*?{.*?\"created\":\"(\d*)\".*?}`)
+	reg := regexp.MustCompile(`var.*?def.*?{.*?\"created\":\"?(\d*)\"?.*?}`)
 	
 	res:=reg.FindAllStringSubmatch(rawStr,-1)
 	//fmt.Println(res)
 	created=res[0][1]
+	fmt.Println("got created = ",created)
 	return created
 }

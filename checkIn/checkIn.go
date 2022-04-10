@@ -3,8 +3,10 @@ package checkIn
 import (
 	"checkIn/client"
 	"checkIn/models"
-	"fmt"
+	"compress/gzip"
+	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -14,8 +16,14 @@ type CheckIn struct {
 	cookie string 
 }
 
-var cookiePath="../.cookie"
-var confPath="../config.ini"
+type Response struct{
+	E int `json:"e"`
+	M string `json:"m"`
+	D interface{} `json:"d"`
+}
+
+var cookiePath="./.cookie"
+var confPath="./config.ini"
 var url1="https://healthreport.zju.edu.cn/ncov/wap/default/index"
 var url2="https://healthreport.zju.edu.cn/ncov/wap/default/index/ncov/wap/default/save"
 
@@ -47,7 +55,7 @@ func(c CheckIn)SignIn()error{
 	req1.Header.Add("cookie",c.cookie)
 	req1.Header.Add("user-agent","Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/19E258 Ariver/1.1.0 AliApp(AP/10.2.59.2500) Nebula WK RVKType(1) AlipayDefined(nt:WIFI,ws:390|780|3.0) AlipayClient/10.2.59.2500 Language/en Region/CN NebulaX/1.0.0")
 	req1.Header.Add("accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-	req1.Header.Add("connection","keep-alive")
+	//req1.Header.Add("connection","keep-alive")
 	if err!=nil{
 		return err
 	}
@@ -56,7 +64,12 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
     defer resp1.Body.Close()
+
 	raw,err:=ioutil.ReadAll(resp1.Body)
+	if err!=nil{
+		return err
+	}
+	err=ioutil.WriteFile("raw.log",raw,0666)
 	if err!=nil{
 		return err
 	}
@@ -65,6 +78,10 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
 	req2Body:=urlVals.Encode()
+	err=ioutil.WriteFile("reqBody.log",[]byte(req2Body),0666)
+	if err!=nil{
+		return err
+	}
 	//签到
 	req2,err:=http.NewRequest(http.MethodPost,url2,strings.NewReader(req2Body))
 	req2.Header.Add("origin","https://healthreport.zju.edu.cn")
@@ -74,7 +91,7 @@ func(c CheckIn)SignIn()error{
 	req2.Header.Add("Accept-Encoding","gzip, deflate, br")
 	req2.Header.Add("X-Requested-With","XMLHttpRequest") //请求是否由ajax发起
 	req2.Header.Add("referer","https://healthreport.zju.edu.cn/ncov/wap/default/index")
-	req1.Header.Add("connection","keep-alive")
+	//req1.Header.Add("connection","keep-alive")
 	if err!=nil{
 		return err
 	}
@@ -83,10 +100,18 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
 	defer resp2.Body.Close()
-	rawMsg,err:=ioutil.ReadAll(resp2.Body)
+	r:=&Response{}
+	//响应结果使用gzip压缩，解析前需要进行decode
+	gr,err:=gzip.NewReader(resp2.Body)
+	defer gr.Close()
 	if err!=nil{
 		return err
 	}
-	fmt.Println(string(rawMsg))
+	raw,_=ioutil.ReadAll(gr)
+	err=json.Unmarshal(raw,r)
+	if err!=nil{
+		return err
+	}
+	log.Println("resp2:",r.M)
 	return nil
 }

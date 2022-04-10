@@ -31,7 +31,7 @@ type AC struct{
 }
 
 var mp = map[string]string{
-	"宁波校区": "../geoInfos/cst.json",
+	"宁波校区": "geoInfos/cst.json",
 }
 
 func GetGeoInfo(campus string) (string,*GeoInfo,error) {
