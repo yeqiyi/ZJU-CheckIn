@@ -57,7 +57,7 @@ func(c Config)GetReqBody(raw []byte) (url.Values,error) {
 	urlVals.Add("campus","宁波校区") //所在校区
 	urlVals.Add("id",utils.GetId(raw))
 	urlVals.Add("uid",utils.GetUid(raw))
-	urlVals.Add("date",utils.GetDate(raw))
+	urlVals.Add("date",utils.GetDate())
 	urlVals.Add("tw","0") //是否发热
 	urlVals.Add("sfcxtz","0")
 	urlVals.Add("sfyyjc","0") //与sfcxtz字段相关联(若sfcxtz为0，此字段值为0)

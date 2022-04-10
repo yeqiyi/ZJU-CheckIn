@@ -50,12 +50,7 @@ func TestGetId(t *testing.T) {
 }
 
 func TestGetDate(t *testing.T) {
-	if raw,err:=ioutil.ReadFile(RawPath);err==nil{
-		fmt.Println(GetDate(raw))
-	}else{
-		fmt.Println(err)
-		t.Fail()
-	}
+	fmt.Println(GetDate())
 }
 
 func TestReadFile(t *testing.T) {
