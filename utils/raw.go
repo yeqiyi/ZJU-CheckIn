@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"time"
+	//"time"
 )
 
+
+/*
 //获取Date
 func GetDate()string{
 	y:=time.Now().Year()
@@ -15,7 +17,7 @@ func GetDate()string{
 	date:=fmt.Sprintf("%04d%02d%02d",y,m,d)
 	return date
 }
-
+*/
 //获取特殊字段
 func Getfields(raw []byte) (map[string]string, error) {
 	mp := make(map[string]string)
@@ -66,7 +68,6 @@ func GetUid(raw []byte) string {
 
 
 //获取Date
-/*
 func GetDate(raw []byte)string{
 	date:=""
 	rawStr := string(raw)
@@ -78,7 +79,7 @@ func GetDate(raw []byte)string{
 	fmt.Println("got date = ",date)
 	return date
 }
-*/
+
 
 //获取created字段
 func GetCreated(raw []byte)string{

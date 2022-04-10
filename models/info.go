@@ -3,6 +3,7 @@ package models
 import (
 	"checkIn/utils"
 	"net/url"
+
 	"gopkg.in/ini.v1"
 )
 
@@ -57,7 +58,7 @@ func(c Config)GetReqBody(raw []byte) (url.Values,error) {
 	urlVals.Add("campus","宁波校区") //所在校区
 	urlVals.Add("id",utils.GetId(raw))
 	urlVals.Add("uid",utils.GetUid(raw))
-	urlVals.Add("date",utils.GetDate())
+	urlVals.Add("date",utils.GetDate(raw))
 	urlVals.Add("tw","0") //是否发热
 	urlVals.Add("sfcxtz","0")
 	urlVals.Add("sfyyjc","0") //与sfcxtz字段相关联(若sfcxtz为0，此字段值为0)
@@ -70,7 +71,8 @@ func(c Config)GetReqBody(raw []byte) (url.Values,error) {
 	urlVals.Add("area",g.AddrComp.Prov+" "+g.AddrComp.City+" "+g.AddrComp.Dst) 
 	urlVals.Add("province",g.AddrComp.Prov) 
 	urlVals.Add("city",g.AddrComp.City)
-	urlVals.Add("geo_api_info",rawGeoInfo) ///具体定位信息，从geoinfos/*.json中读取
+	//urlVals.Add("geo_api_info","{\"type\":\"complete\",\"position\":{\"Q\":30.292195,\"R\":120.03711099999998,\"lng\":120.037111,\"lat\":30.292195},\"location_type\":\"html5\",\"message\":\"Get geolocation success.Don't need convert.Get address success.\",\"accuracy\":\"30.776123\",\"isConverted\":true,\"status\":1,\"addressComponent\":{\"citycode\":\"0571\",\"adcode\":\"330110\",\"businessAreas\":[],\"neighborhoodType\":\"\",\"neighborhood\":\"\",\"building\":\"\",\"buildingType\":\"\",\"street\":\"同顺街\",\"streetNumber\":\"3-7商铺\",\"country\":\"中国\",\"province\":\"浙江省\",\"city\":\"杭州市\",\"district\":\"余杭区\",\"towncode\":\"330110005000\",\"township\":\"五常街道\"},\"formattedAddress\":\"浙江省杭州市余杭区五常街道西溪北苑北区\",\"roads\":[],\"crosses\":[],\"pois\":[],\"info\":\"SUCCESS\"}") ///具体定位信息，从geoinfos/*.json中读取
+	urlVals.Add("geo_api_info",rawGeoInfo)
 	urlVals.Add("created",utils.GetCreated(raw)) //上次打卡时间，时间戳（从Raw中的def截取）
 	urlVals.Add("qksm","") //情况说明，与字段Sfcxzysx相关联（若Sfcxzysx为0，此字段为空）
 	urlVals.Add("sfzx","1") //今日是否在校（在：1；不在：0）

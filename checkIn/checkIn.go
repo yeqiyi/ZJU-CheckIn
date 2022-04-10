@@ -25,7 +25,7 @@ type Response struct{
 var cookiePath="./.cookie"
 var confPath="./config.ini"
 var url1="https://healthreport.zju.edu.cn/ncov/wap/default/index"
-var url2="https://healthreport.zju.edu.cn/ncov/wap/default/index/ncov/wap/default/save"
+var url2="https://healthreport.zju.edu.cn/ncov/wap/default/save"
 
 func SetUp()(CheckIn,error){
 	c:=CheckIn{}
@@ -85,12 +85,14 @@ func(c CheckIn)SignIn()error{
 	//签到
 	req2,err:=http.NewRequest(http.MethodPost,url2,strings.NewReader(req2Body))
 	req2.Header.Add("origin","https://healthreport.zju.edu.cn")
+	req2.Header.Add("cookie",c.cookie)
 	req2.Header.Add("user-agent","Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/19E258 Ariver/1.1.0 AliApp(AP/10.2.59.2500) Nebula WK RVKType(1) AlipayDefined(nt:WIFI,ws:390|780|3.0) AlipayClient/10.2.59.2500 Language/en Region/CN NebulaX/1.0.0")
 	req2.Header.Add("content-type","application/x-www-form-urlencoded; charset=UTF-8")
+	req2.Header.Add("Accept","application/json, text/javascript, */*; q=0.01")
 	req2.Header.Add("Accept-Language","en-US")
 	req2.Header.Add("Accept-Encoding","gzip, deflate, br")
 	req2.Header.Add("X-Requested-With","XMLHttpRequest") //请求是否由ajax发起
-	req2.Header.Add("referer","https://healthreport.zju.edu.cn/ncov/wap/default/index")
+	req2.Header.Add("referer",url1)
 	//req1.Header.Add("connection","keep-alive")
 	if err!=nil{
 		return err
@@ -100,6 +102,7 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
 	defer resp2.Body.Close()
+	
 	r:=&Response{}
 	//响应结果使用gzip压缩，解析前需要进行decode
 	gr,err:=gzip.NewReader(resp2.Body)
@@ -112,6 +115,6 @@ func(c CheckIn)SignIn()error{
 	if err!=nil{
 		return err
 	}
-	log.Println("resp2:",r.M)
+	log.Println("statusCode:",resp2.StatusCode,"resp2:",r)
 	return nil
 }

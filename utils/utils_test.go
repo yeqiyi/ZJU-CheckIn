@@ -50,7 +50,7 @@ func TestGetId(t *testing.T) {
 }
 
 func TestGetDate(t *testing.T) {
-	fmt.Println(GetDate())
+	//fmt.Println(GetDate())
 }
 
 func TestReadFile(t *testing.T) {
