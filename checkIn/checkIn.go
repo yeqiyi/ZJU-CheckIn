@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -47,6 +48,12 @@ func(c *CheckIn)getCookie() error{
 }
 
 func(c CheckIn)SignIn()error{
+	logFileName:="checkIn.log"
+	logFile,err:=os.Create(logFileName)
+	defer logFile.Close()
+	if err!=nil{
+		return err
+	}
 	conf,err:=models.LoadConf(confPath)
 	if err!=nil{
 		return err
@@ -69,7 +76,7 @@ func(c CheckIn)SignIn()error{
 	if err!=nil{
 		return err
 	}
-	err=ioutil.WriteFile("raw.log",raw,0666)
+	//err=ioutil.WriteFile("raw.log",raw,0666)
 	if err!=nil{
 		return err
 	}
@@ -78,7 +85,7 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
 	req2Body:=urlVals.Encode()
-	err=ioutil.WriteFile("reqBody.log",[]byte(req2Body),0666)
+	//err=ioutil.WriteFile("reqBody.log",[]byte(req2Body),0666)
 	if err!=nil{
 		return err
 	}
@@ -116,5 +123,8 @@ func(c CheckIn)SignIn()error{
 		return err
 	}
 	log.Println("statusCode:",resp2.StatusCode,"resp2:",r)
+	checkInLog:=log.New(logFile,"[info]",log.LstdFlags)
+	checkInLog.SetPrefix("[info]")
+	checkInLog.Println("response message:",r.M)
 	return nil
 }

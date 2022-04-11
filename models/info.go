@@ -2,6 +2,7 @@ package models
 
 import (
 	"checkIn/utils"
+	"log"
 	"net/url"
 
 	"gopkg.in/ini.v1"
@@ -19,6 +20,7 @@ func LoadConf(configPath string)(*Config,error){
 	if err!=nil{
 		return nil,err
 	}
+	log.Println("Config : ",*conf)
 	return conf,nil
 }
 
@@ -55,7 +57,7 @@ func(c Config)GetReqBody(raw []byte) (url.Values,error) {
 	urlVals.Add("sfyxjzxgym","1") //是否意向接种（有：1；没有：0）
 	urlVals.Add("sfbyjzrq","5") //是否不宜接种人群:否
 	urlVals.Add("jzxgymqk","6") //当前接种情况:已接种第三针
-	urlVals.Add("campus","宁波校区") //所在校区
+	urlVals.Add("campus",c.Campus) //所在校区
 	urlVals.Add("id",utils.GetId(raw))
 	urlVals.Add("uid",utils.GetUid(raw))
 	urlVals.Add("date",utils.GetDate(raw))

@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 )
 
 type GeoInfo struct {
@@ -32,9 +33,11 @@ type AC struct{
 
 var mp = map[string]string{
 	"宁波校区": "geoInfos/cst.json",
+	"紫金港校区": "geoInfos/hz.json",
 }
 
 func GetGeoInfo(campus string) (string,*GeoInfo,error) {
+	log.Println("Campus is ",campus,",reading geoInfo file : ",mp[campus])
 	jsonFile := mp[campus]
 	raw,err:=ioutil.ReadFile(jsonFile)
 	if err!=nil{
