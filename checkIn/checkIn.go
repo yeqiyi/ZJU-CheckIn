@@ -49,15 +49,21 @@ func(c *CheckIn)getCookie() error{
 
 func(c CheckIn)SignIn()error{
 	logFileName:="checkIn.log"
-	logFile,err:=os.Create(logFileName)
+	logFile,err:=os.OpenFile(logFileName,os.O_APPEND|os.O_CREATE,0644)
+	checkInLog:=log.New(logFile,"[info]",log.LstdFlags)
 	defer logFile.Close()
 	if err!=nil{
 		return err
 	}
 	conf,err:=models.LoadConf(confPath)
 	if err!=nil{
+		checkInLog.SetPrefix("[error]")
+		checkInLog.Println("获取配置失败！")
 		return err
 	}
+	checkInLog.SetPrefix("[info]")
+	checkInLog.Println("Config Info:campus = ",conf.Campus,", ismoved = ",conf.Ismoved)
+
 	req1,err:=http.NewRequest(http.MethodGet,url1,nil)
 	req1.Header.Add("cookie",c.cookie)
 	req1.Header.Add("user-agent","Mozilla/5.0 (iPhone; CPU iPhone OS 15_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/19E258 Ariver/1.1.0 AliApp(AP/10.2.59.2500) Nebula WK RVKType(1) AlipayDefined(nt:WIFI,ws:390|780|3.0) AlipayClient/10.2.59.2500 Language/en Region/CN NebulaX/1.0.0")
@@ -68,6 +74,8 @@ func(c CheckIn)SignIn()error{
 	}
 	resp1,err:=c.client.Do(req1)
 	if err!=nil{
+		checkInLog.SetPrefix("[fatal]")
+		checkInLog.Fatalln("请求失败！")
 		return err
 	}
     defer resp1.Body.Close()
@@ -76,19 +84,13 @@ func(c CheckIn)SignIn()error{
 	if err!=nil{
 		return err
 	}
-	//err=ioutil.WriteFile("raw.log",raw,0666)
-	if err!=nil{
-		return err
-	}
+
 	urlVals,err:=conf.GetReqBody(raw)
 	if err!=nil{
 		return err
 	}
 	req2Body:=urlVals.Encode()
-	//err=ioutil.WriteFile("reqBody.log",[]byte(req2Body),0666)
-	if err!=nil{
-		return err
-	}
+
 	//签到
 	req2,err:=http.NewRequest(http.MethodPost,url2,strings.NewReader(req2Body))
 	req2.Header.Add("origin","https://healthreport.zju.edu.cn")
@@ -106,6 +108,8 @@ func(c CheckIn)SignIn()error{
 	}
 	resp2,err:=c.client.Do(req2)
 	if err!=nil{
+		checkInLog.SetPrefix("[fatal]")
+		checkInLog.Fatalln("请求失败！")
 		return err
 	}
 	defer resp2.Body.Close()
@@ -120,11 +124,12 @@ func(c CheckIn)SignIn()error{
 	raw,_=ioutil.ReadAll(gr)
 	err=json.Unmarshal(raw,r)
 	if err!=nil{
+		checkInLog.SetPrefix("[warn]")
+		checkInLog.Println("响应解析失败！")
 		return err
 	}
 	log.Println("statusCode:",resp2.StatusCode,"resp2:",r)
-	checkInLog:=log.New(logFile,"[info]",log.LstdFlags)
 	checkInLog.SetPrefix("[info]")
-	checkInLog.Println("response message:",r.M)
+	checkInLog.Println("Response message:",r.M)
 	return nil
 }
