@@ -70,3 +70,12 @@ func TestGetGeoInfo(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestBot(t *testing.T) {
+	bot:=GetBot("../config.ini")
+	err:=bot.SendMsg("Hello world 喵")
+	if err!=nil{
+		fmt.Println(err)
+		t.Fail()
+	}
+}

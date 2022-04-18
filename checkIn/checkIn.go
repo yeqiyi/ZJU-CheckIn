@@ -3,6 +3,7 @@ package checkIn
 import (
 	"checkIn/client"
 	"checkIn/models"
+	"checkIn/utils"
 	"compress/gzip"
 	"encoding/json"
 	"io/ioutil"
@@ -124,12 +125,17 @@ func(c CheckIn)SignIn()error{
 	raw,_=ioutil.ReadAll(gr)
 	err=json.Unmarshal(raw,r)
 	if err!=nil{
-		checkInLog.SetPrefix("[warn]")
+		checkInLog.SetPrefix("[error]")
 		checkInLog.Println("响应解析失败！")
 		return err
 	}
 	log.Println("statusCode:",resp2.StatusCode,"resp2:",r)
 	checkInLog.SetPrefix("[info]")
 	checkInLog.Println("Response message:",r.M)
+	bot:=utils.GetBot(confPath)
+	if err:=bot.SendMsg(r.M+"喵~");err!=nil{
+		checkInLog.SetPrefix("[error]")
+		checkInLog.Println("DingDing机器人信息发送失败！")
+	}
 	return nil
 }
