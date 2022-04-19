@@ -8,16 +8,16 @@
 ### 获取Cookie
 在输入账户名和密码[登录](https://zjuam.zju.edu.cn/cas/login?service=https%3A%2F%2Fhealthreport.zju.edu.cn%2Fa_zju%2Fapi%2Fsso%2Findex%3Fredirect%3Dhttps%253A%252F%252Fhealthreport.zju.edu.cn%252Fncov%252Fwap%252Fdefault%252Findex)后，打开万能的f12获取你的cookie
 
-![获取cookie](https://imgtu.com/i/L08FC8)
+![获取cookie](https://s1.ax1x.com/2022/04/19/L08FC8.png)
 
 拿到cookie后将cookie复制保存在根目录中的`.cookie`文件中
 
-![保存位置](https://imgtu.com/i/L089Et)
+![保存位置](https://s1.ax1x.com/2022/04/19/L089Et.png)
 
 ### 修改配置
 配置文件如下
 
-![config.ini](https://imgtu.com/i/L08SHI)
+![config.ini](https://s1.ax1x.com/2022/04/19/L08SHI.png)
 
 `注：配置文件会根据配置的校区所在地读取geoInfos目录下对应的fake定位信息（目前仅支持宁波校区，后续有需要再更新）`
 
@@ -27,13 +27,13 @@
  2. 添加群机器人（注意保存acces_token和密签secret）
  3. 在`config.ini`中加进保存的token和密签
 
-![获取access_token](https://imgtu.com/i/L08P4f)
+![获取access_token](https://s1.ax1x.com/2022/04/19/L08P4f.png)
 
-![获取secret](https://imgtu.com/i/L08CUP)
+![获取secret](https://s1.ax1x.com/2022/04/19/L08CUP.png)
 
-![配置token](https://imgtu.com/i/L08k8S)
+![配置token](https://s1.ax1x.com/2022/04/19/L08k8S.png)
 
-![签到结果](https://imgtu.com/i/L08Agg)
+![签到结果](https://s1.ax1x.com/2022/04/19/L08Agg.png)
 
 ### 打卡
 配置完成后直接运行checkIn.exe即可打卡
