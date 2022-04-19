@@ -21,6 +21,20 @@
 
 `注：配置文件会根据配置的校区所在地读取geoInfos目录下对应的fake定位信息（目前仅支持宁波校区，后续有需要再更新）`
 
+### 添加钉钉机器人（可选）
+可添加钉钉机器人用于打卡后的提醒，使用方法如下：
+ 1. 创建单人群聊（钉钉右上角加号->添加联系人->面对面建群（随便输入一串数字即可））
+ 2. 添加群机器人（注意保存acces_token和密签secret）
+ 3. 在`config.ini`中加进保存的token和密签
+
+![获取access_token](images/%E8%8E%B7%E5%8F%96access_token.png)
+
+![获取secret](images/%E8%8E%B7%E5%8F%96secret.png)
+
+![配置token](images/%E9%85%8D%E7%BD%AEtoken.png)
+
+![签到结果](images/%E7%AD%BE%E5%88%B0%E7%BB%93%E6%9E%9C.png)
+
 ### 打卡
 配置完成后直接运行checkIn.exe即可打卡
 
