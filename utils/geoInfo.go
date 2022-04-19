@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 )
@@ -37,6 +38,9 @@ var mp = map[string]string{
 }
 
 func GetGeoInfo(campus string) (string,*GeoInfo,error) {
+	if _,ok:=mp[campus];!ok{
+		return "",nil,errors.New("无位置信息!(campus:"+campus+")")
+	}
 	log.Println("Campus is ",campus,",reading geoInfo file : ",mp[campus])
 	jsonFile := mp[campus]
 	raw,err:=ioutil.ReadFile(jsonFile)
